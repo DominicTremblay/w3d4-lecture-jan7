@@ -1,4 +1,32 @@
-# Lecture W2D2
+# W7D3 - Lecture - CRUD with Express
+
+## Covered in this lecture
+
+- Request and response cycles between client and server
+- HTTP protocol: http statelessness, http verbs
+- Express, a nodejs Web framework
+- REST
+
+[Full Content of the lecture](./content.md)
+
+## Requests
+
+### Client / Server request process
+
+- Communication is one way
+
+  - The server cannot ask the client for anything
+
+- part of the request
+
+  - method
+  - url
+
+- request has 2 parts
+  - header
+  - body
+
+![Request/Response](./pictures/http_request.png)
 
 ## Why Express?
 
@@ -34,35 +62,89 @@ For each resource, we want to:
 - update => changing a resource
 - delete => deleting a resource
 
-## EJS
+## REST
 
-- We used `ejs` - embedded JavaScript - files to code the html
-- ejs files will contain a mix of html and javaScript code
-- javaScript code is wrapped in `<% %>` brackets
-- ejs files must be located in the `views` folder
-- We learned that ejs can only access data that is passed with the render method:
+Representational State Transfer
+
+REST is a pattern, a convention to organize our url structure
+
+- It should use http verbs to expres what the request wants to accomplish
+- Resource information must be part of the url
+- It uses common data formats (JSON for API)
+- Communication is stateless
+- Each request must pass all information needed to fulfill the request
+
+### http methods
+
+What language does a client use to makes request to the server ? http
+
+http protocol gives us verbs
+
+- Create => Create a new ressource => Post
+- Read => Get a resource => Get
+- Update => Change a resource => Put
+- Delete => Delete a resource => Delete
+
+### Scoping information
+
+- collections vs single entity
+- which one?
+
+### Common Data Format
+
+In the case of an API, what do we expect when we do
+
+GET users => a list of users
 
 ```
-res.render('quotes', { quotes: movieQuotesDb, comments: quoteComments });
+[
+  {id: 1,
+  first_name: 'Clark',
+  last_name: 'Ken',
+  ...},
+  {id: 2,
+  first_name: 'Bruce',
+  last_name: 'Wayne',
+  ...},
+]
 ```
 
-- In our ejs files, we then have access to quotes and comments like any variable. We can get the quotes info
+### Communication is stateless
 
-```
-<ul>
-  <% for (var quoteId in quotes) { %>
-    <li><%= quotes[quoteId].quote %></li>
-      <ul>
-      <% for (var commentId of quotes[quoteId].comments) { %>
-        <li>
+- The server doesn't remember the identity of the client that makes a request.
+- Does not remember the state on the server
 
-          <%= comments[commentId].comment %></li>
+#### Why stateless
 
-         <% } %>
-      </ul>
-  <% } %>
-</ul>
-```
+If the server maintains information about the clients it needs to use memory. When the server needs to handle thousands of client, you need to add more servers. However, how do you communicate the state of all the clients between servers?
+
+Because servers does not maintain state information on clients, each request must pass all information needed to fulfill the request
+
+### End Points
+
+By following REST principles, it allows us to design our end points:
+
+| Action                                | http verb | end point                |
+| ------------------------------------- | --------- | ------------------------ |
+| List all quotes                       | GET       | get '/quotes'            |
+| Get a specific quote                  | GET       | get '/quotes/:id'        |
+| Display the new form                  | GET       | get '/quotes/new         |
+| Create a new quote                    | POST      | post '/quotes            |
+| Display the form for updating a quote | GET       | get '/quotes/:id/update' |
+| Update the quotes                     | PUT       | put '/quotes/:id         |
+| Deleting a specific user              | DELETE    | delete '/quotes:id'      |
+
+#### Nested Resources
+
+You may need to access a nested resources. For example, you need to create a new comment.
+
+| Action               | http verb | end point                  |
+| -------------------- | --------- | -------------------------- |
+| Create a new comment | POST      | post '/quotes/:id/comments |
+
+## Demo
+
+We created a movie quotes app demonstrating the use of Express with RESTful routes.
 
 ### To run the app
 
