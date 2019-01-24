@@ -37,7 +37,7 @@ const movieQuotesDb = {
   },
 };
 
-const quoteComments = {
+const quoteCommentsDb = {
   '70fcf8bd-6cb0-42f3-9887-77aa9db4f0ac': {
     id: '70fcf8bd-6cb0-42f3-9887-77aa9db4f0ac',
     comment: 'So awesome comment!',
@@ -69,16 +69,24 @@ const updateQuote = (quoteId, quote) => {
   movieQuotesDb[quoteId].quote = quote;
 };
 
-// End Points
-app.get('/', function(req, res) {
-  res.redirect('/quotes');
-});
+const quotesList = () => {
+  const quotesComments = [];
+
+  for (const quoteId in movieQuotesDb) {
+    const quote = Object.assign({}, movieQuotesDb[quoteId]);
+    quote.comments = quote.comments.map(
+      commentId => quoteCommentsDb[commentId]
+    );
+    quotesComments.push(quote);
+  }
+  return quotesComments;
+};
 
 // List the quotes and the comments
 app.get('/quotes', function(req, res) {
-  const templateVars = { quotes: movieQuotesDb, comments: quoteComments };
+  const quotes = quotesList();
 
-  res.render('quotes', templateVars);
+  res.json(quotes);
 });
 
 // Adding a new quote

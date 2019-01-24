@@ -2,11 +2,11 @@
   "name": "demo-jan7-19",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "local": "nodemon index.js"
+    "start": "node server.js",
+    "local": "nodemon server.js"
   },
   "repository": {
     "type": "git",
