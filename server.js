@@ -100,19 +100,13 @@ app.get('/quotes/new', (req, res) => {
 // Post the new quote data to movieQuotesDB
 
 app.post('/quotes', (req, res) => {
-  // extract the information from the form.
-
+  // extract the information from the request.
   const quote = req.body.quote;
   // es6 way:
   // const {quote} = req.body;
-
   // Add the new quote to movieQuotesDB
-
   createQuote(quote);
-
-  // redirect to /quotes
-
-  res.redirect('/quotes');
+  res.status(201).send('New quote added');
 });
 
 // Editing a quote

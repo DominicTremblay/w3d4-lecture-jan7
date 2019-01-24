@@ -73,9 +73,7 @@ $(document).ready(() => {
                 ${commentsEl}
               </ul>
 
-              <a href="/quotes/${
-                quoteObj.id
-              }/comments/new" class="btn btn-info">Add Comment</a>
+              <a href="#" class="btn btn-info add-comment">Add Comment</a>
             </div>
           </div>
         </div>
@@ -99,6 +97,56 @@ $(document).ready(() => {
       renderQuotes(quotes);
     });
   };
+
+  const createAddQuoteFrm = () => {
+    return `<form id="add-new-frm">
+      <div style="width: 20em;">
+        <div class="form-group">
+          <input style="width: 100%" type="text" name="quote" id="quote" placeholder="Please enter your quote">
+        </div>
+        <input type="submit" class="btn btn-primary" value="Add">
+      </div>
+    </form>`;
+  };
+
+  const generateRandomString = () => {
+    return Math.random()
+      .toString(36)
+      .substring(7);
+  };
+
+  $('#add-quote-btn').on('click', event => {
+    event.preventDefault();
+    const form = createAddQuoteFrm();
+    $('.container').append(form);
+  });
+
+  $('.container').on('submit', '#add-new-frm', event => {
+    event.preventDefault();
+    form = event.target;
+    quote = $(form.quote);
+    const newQuote = {
+      id: generateRandomString(),
+      quote: quote.val(),
+      comments: [],
+    };
+
+    // Ajax request to post '/quotes'
+    const options = {
+      url: `${ROOT_URL}/quotes`,
+      method: 'POST',
+      data: newQuote,
+    };
+
+    request(options, response => {
+      console.log(response);
+    });
+
+    // Add new quote to page
+    $('#quote-list').append(createQuote(newQuote));
+    quote.val('');
+    $(form).remove();
+  });
 
   getQuotes();
 }); // End Document Ready
